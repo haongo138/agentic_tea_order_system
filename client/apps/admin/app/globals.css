@@ -1,0 +1,111 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --sidebar-width: 240px;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: #0a0f14;
+    color: #dce8f4;
+    font-family: var(--font-sora), system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-sora), system-ui, sans-serif;
+  }
+
+  /* Custom scrollbar — dark theme */
+  ::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0a0f14;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #1f2e42;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #d4952a;
+  }
+}
+
+@layer components {
+  .admin-card {
+    @apply bg-admin-surface border border-admin-border rounded-2xl;
+  }
+
+  .admin-label {
+    @apply text-xs font-semibold uppercase tracking-widest text-admin-muted;
+  }
+
+  .data-value {
+    font-family: var(--font-jetbrains), monospace;
+  }
+
+  /* Ambient grid background */
+  .ambient-grid {
+    background-image:
+      linear-gradient(rgba(31, 46, 66, 0.4) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(31, 46, 66, 0.4) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  /* Glowing status dot */
+  .status-dot-pending {
+    @apply w-2 h-2 rounded-full bg-amber-400;
+    box-shadow: 0 0 8px rgba(251, 191, 36, 0.6);
+    animation: glowPulse 2s ease-in-out infinite;
+  }
+
+  .status-dot-preparing {
+    @apply w-2 h-2 rounded-full bg-sky-400;
+    box-shadow: 0 0 8px rgba(56, 189, 248, 0.6);
+    animation: glowPulse 2s ease-in-out infinite;
+  }
+
+  .status-dot-ready {
+    @apply w-2 h-2 rounded-full bg-admin-emerald;
+    box-shadow: 0 0 8px rgba(46, 212, 126, 0.6);
+    animation: glowPulse 1.5s ease-in-out infinite;
+  }
+
+  .status-dot-completed {
+    @apply w-2 h-2 rounded-full bg-admin-muted;
+  }
+
+  .status-dot-cancelled {
+    @apply w-2 h-2 rounded-full bg-admin-rose;
+  }
+}
+
+@keyframes glowPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Sidebar nav active indicator */
+.nav-item-active {
+  position: relative;
+}
+.nav-item-active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 60%;
+  background: #d4952a;
+  border-radius: 0 2px 2px 0;
+}

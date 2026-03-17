@@ -1,0 +1,25 @@
+{
+  "name": "lamtra-client",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "type-check": "turbo type-check",
+    "dev:customer": "turbo dev --filter=@lamtra/customer",
+    "dev:admin": "turbo dev --filter=@lamtra/admin"
+  },
+  "devDependencies": {
+    "turbo": "^2.3.3",
+    "typescript": "^5.6.3",
+    "prettier": "^3.3.3"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "packageManager": "npm@10.0.0"
+}
