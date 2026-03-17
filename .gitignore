@@ -2,33 +2,72 @@
 # Node.js (React, Next, Vite)
 # ===============================
 node_modules/
+**/node_modules/
 dist/
 build/
+.output/
+.cache/
+.turbo/
+*.tsbuildinfo
+
+# Next.js
+.next/
+out/
+
+# Vite
+.vite/
+
+# Env files
 .env
 .env.local
+.env.*.local
+.env.development
+.env.production
+.env.staging
 
 # ===============================
 # PHP
 # ===============================
 vendor/
-.env
 *.log
+*.cache
+composer.lock
 
 # ===============================
 # Python (AI Service)
 # ===============================
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
 venv/
-.env
+.venv/
+env/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
 
 # ===============================
-# VSCode
+# Editors
 # ===============================
 .vscode/
+.idea/
+*.swp
+*.swo
+*.orig
 
 # ===============================
 # System / OS
 # ===============================
 .DS_Store
 Thumbs.db
+desktop.ini
+
+# ===============================
+# Logs & temp files
+# ===============================
+*.log
+logs/
+tmp/
+temp/
