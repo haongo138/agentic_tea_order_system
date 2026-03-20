@@ -1,1 +1,0 @@
-self.__NEXT_FONT_MANIFEST="{\"pages\":{},\"app\":{\"/Users/antono/workspace/lamtra-system/client/apps/customer/app/layout\":[\"static/media/7b89a4fd5e90ede0-s.p.woff2\",\"static/media/de42cfb9a3b980ae-s.p.woff2\"]},\"appUsingSizeAdjust\":true,\"pagesUsingSizeAdjust\":false}"

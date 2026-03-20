@@ -71,3 +71,9 @@ desktop.ini
 logs/
 tmp/
 temp/
+
+# ===============================
+# Local tool config
+# ===============================
+.mcp.json
+.claude.local.md
