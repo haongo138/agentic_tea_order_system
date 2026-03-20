@@ -1,6 +1,6 @@
 import { relations } from "drizzle-orm";
 import { accounts, customers, branches, productCategories, sizes, toppings, vouchers } from "./core";
-import { employees, products, branchProductStatus, loyaltyHistory, customerVouchers, news } from "./dependent";
+import { employees, products, branchProductStatus, loyaltyHistory, customerVouchers, categoryToppings, news } from "./dependent";
 import { orders, orderDetails, orderToppings, reviews, media } from "./orders";
 
 export const accountsRelations = relations(accounts, ({ one }) => ({
@@ -20,6 +20,7 @@ export const employeesRelations = relations(employees, ({ one }) => ({
 
 export const productCategoriesRelations = relations(productCategories, ({ many }) => ({
   products: many(products),
+  categoryToppings: many(categoryToppings),
 }));
 
 export const productsRelations = relations(products, ({ one, many }) => ({
@@ -74,6 +75,12 @@ export const sizesRelations = relations(sizes, ({ many }) => ({
 
 export const toppingsRelations = relations(toppings, ({ many }) => ({
   orderToppings: many(orderToppings),
+  categoryToppings: many(categoryToppings),
+}));
+
+export const categoryToppingsRelations = relations(categoryToppings, ({ one }) => ({
+  category: one(productCategories, { fields: [categoryToppings.categoryId], references: [productCategories.id] }),
+  topping: one(toppings, { fields: [categoryToppings.toppingId], references: [toppings.id] }),
 }));
 
 export const orderToppingsRelations = relations(orderToppings, ({ one }) => ({

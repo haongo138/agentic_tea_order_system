@@ -1,0 +1,42 @@
+version: "0.5"
+
+processes:
+  customer-app:
+    command: npm run dev:customer
+    working_dir: ./client
+    readiness_probe:
+      http_get:
+        host: localhost
+        port: 3000
+      initial_delay_seconds: 5
+      period_seconds: 10
+    availability:
+      restart: on_failure
+      max_restarts: 3
+
+  admin-app:
+    command: npm run dev:admin
+    working_dir: ./client
+    readiness_probe:
+      http_get:
+        host: localhost
+        port: 3001
+      initial_delay_seconds: 5
+      period_seconds: 10
+    availability:
+      restart: on_failure
+      max_restarts: 3
+
+  express-api:
+    command: npm run dev
+    working_dir: ./server
+    readiness_probe:
+      http_get:
+        host: localhost
+        port: 4000
+        path: /api/health
+      initial_delay_seconds: 3
+      period_seconds: 10
+    availability:
+      restart: on_failure
+      max_restarts: 3

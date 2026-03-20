@@ -1,0 +1,54 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.15.1/.schema/devbox.schema.json",
+  "packages": [
+    "nodejs@22",
+    "process-compose@1.94.0"
+  ],
+  "env": {
+    "NODE_ENV": "development"
+  },
+  "shell": {
+    "init_hook": [
+      "echo ''",
+      "echo '  🍵  Lam Trà Development Environment'",
+      "echo ''",
+      "echo '  Commands:'",
+      "echo '    devbox services up    — Start all services'",
+      "echo '    devbox run install    — Install all dependencies'",
+      "echo '    devbox run dev:fe     — Frontend only'",
+      "echo '    devbox run dev:be     — Backend only'",
+      "echo ''",
+      "echo '  Ports:'",
+      "echo '    :3000  Customer app'",
+      "echo '    :3001  Admin app'",
+      "echo '    :4000  Express API'",
+      "echo ''"
+    ],
+    "scripts": {
+      "install": [
+        "cd client && npm install",
+        "cd server && npm install"
+      ],
+      "dev:fe": [
+        "cd client && npm run dev"
+      ],
+      "dev:be": [
+        "cd server && npm run dev"
+      ],
+      "build": [
+        "cd client && npm run build",
+        "cd server && npm run build"
+      ],
+      "test": [
+        "cd server && npm run test"
+      ],
+      "type-check": [
+        "cd client && npm run type-check",
+        "cd server && npm run type-check"
+      ],
+      "lint": [
+        "cd client && npm run lint"
+      ]
+    }
+  }
+}

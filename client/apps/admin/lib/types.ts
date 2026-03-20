@@ -1,89 +1,163 @@
+// --- Types matching backend API response shapes ---
+
 export type OrderStatus =
   | "pending"
   | "preparing"
   | "ready"
+  | "delivering"
+  | "delivered"
   | "completed"
   | "cancelled";
 
-export type UserRole = "super_admin" | "branch_manager" | "staff";
+export type UserRole = "admin" | "manager" | "staff";
 
 export interface AdminOrder {
-  id: string;
-  orderNumber: string;
-  customerName: string;
-  customerPhone: string;
-  items: OrderItem[];
-  total: number;
+  id: number;
+  customerId: number;
+  branchId: number;
+  branchName: string | null;
+  voucherId: number | null;
+  subtotal: string;
+  discountAmount: string;
+  totalPayment: string;
+  paymentMethod: string;
   status: OrderStatus;
-  branchId: string;
-  branchName: string;
-  paymentMethod: "cod" | "vnpay" | "momo";
-  isPaid: boolean;
-  createdAt: string;
-  updatedAt: string;
-  note?: string;
+  deliveryAddress: string | null;
+  orderDate: string;
+  note: string | null;
+  createdAt?: string;
+}
+
+export interface AdminOrderDetail extends AdminOrder {
+  items: OrderItem[];
+  review: Review | null;
 }
 
 export interface OrderItem {
-  productId: string;
-  productName: string;
-  size: "S" | "M" | "L";
-  iceLevel: number;
-  sugarLevel: number;
-  toppings: string[];
+  id: number;
+  productId: number;
+  productName: string | null;
+  sizeId: number | null;
+  sizeName: string | null;
   quantity: number;
-  unitPrice: number;
+  sugarLevel: number;
+  iceLevel: number;
+  priceAtOrderTime: string;
+  totalPrice: string;
+  toppings: OrderTopping[];
+}
+
+export interface OrderTopping {
+  id: number;
+  orderDetailId: number;
+  toppingId: number;
+  toppingName: string | null;
+  unitPriceAtSaleTime: string;
+}
+
+export interface Review {
+  id: number;
+  orderId: number;
+  starRating: number;
+  content: string | null;
+  createdAt: string;
 }
 
 export interface AdminProduct {
-  id: string;
+  id: number;
   name: string;
-  nameVi: string;
-  category: string;
-  price: number;
-  isAvailable: boolean;
-  badge?: string;
-  rating: number;
-  reviewCount: number;
-  totalSold: number;
-  colorAccent: string;
+  description: string | null;
+  basePrice: string;
+  imageUrl: string | null;
+  salesStatus: string;
+  categoryId: number;
+  categoryName: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AdminCategory {
+  id: number;
+  name: string;
+  description: string | null;
+  productCount: number;
 }
 
 export interface AdminBranch {
-  id: string;
+  id: number;
   name: string;
-  address: string;
-  district: string;
-  managerId: string;
-  managerName: string;
-  phone: string;
-  isActive: boolean;
-  revenue: { today: number; week: number; month: number };
-  ordersToday: number;
-  rating: number;
+  address: string | null;
+  phoneNumber: string | null;
+  latitude: string | null;
+  longitude: string | null;
+  operatingStatus: string;
+  openingTime: string | null;
+  closingTime: string | null;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface StaffMember {
-  id: string;
-  name: string;
-  role: UserRole;
-  branchId: string;
-  branchName: string;
-  email: string;
-  phone: string;
-  joinedAt: string;
-  isActive: boolean;
+  id: number;
+  accountId: number | null;
+  branchId: number;
+  branchName: string | null;
+  fullName: string;
+  email: string | null;
+  phoneNumber: string | null;
+  role: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface DashboardStats {
+  revenueToday: string;
+  ordersToday: number;
+  avgRating: string | null;
 }
 
 export interface RevenueDataPoint {
   date: string;
-  revenue: number;
+  revenue: string;
   orders: number;
 }
 
+export interface TopProduct {
+  productId: number;
+  productName: string;
+  imageUrl: string | null;
+  totalQuantity: number;
+  totalRevenue: string;
+}
+
 export interface SentimentData {
+  total: number;
   positive: number;
   neutral: number;
   negative: number;
-  total: number;
+}
+
+export interface AuthAccount {
+  id: number;
+  username: string;
+  role: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type ArticleType = "promotion" | "announcement" | "blog";
+export type PublishStatus = "draft" | "published" | "archived";
+
+export interface NewsArticle {
+  id: number;
+  title: string;
+  content: string;
+  imageUrl: string | null;
+  articleType: ArticleType;
+  publishDate: string;
+  publishStatus: PublishStatus;
+  createdAt: string;
+  updatedAt: string;
 }

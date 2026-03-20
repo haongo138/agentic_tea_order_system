@@ -9,10 +9,14 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import type { RevenueDataPoint } from "@/lib/types";
+interface ChartDataPoint {
+  date: string;
+  revenue: number;
+  orders: number;
+}
 
 interface RevenueChartProps {
-  data: RevenueDataPoint[];
+  data: ChartDataPoint[];
 }
 
 function formatRevenue(value: number) {

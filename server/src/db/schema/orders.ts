@@ -8,6 +8,7 @@ import {
   timestamp,
   pgEnum,
   check,
+  boolean,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { customers, branches, vouchers, sizes, toppings } from "./core";
@@ -15,7 +16,15 @@ import { products, news } from "./dependent";
 
 // Enums
 export const paymentMethodEnum = pgEnum("payment_method", ["cod", "bank_transfer"]);
-export const orderStatusEnum = pgEnum("order_status", ["received", "prepared", "collected", "paid", "cancelled"]);
+export const orderStatusEnum = pgEnum("order_status", [
+  "pending",     // Order placed, awaiting store preparation
+  "preparing",   // Store is preparing the order
+  "ready",       // Order ready for pickup/delivery
+  "delivering",  // Order on the way to customer
+  "delivered",   // Order delivered to customer
+  "completed",   // Payment confirmed, order finalized
+  "cancelled",   // Order cancelled
+]);
 export const sugarLevelEnum = pgEnum("sugar_level", ["0%", "25%", "50%", "75%", "100%"]);
 export const iceLevelEnum = pgEnum("ice_level", ["0%", "25%", "50%", "75%", "100%"]);
 export const fileTypeEnum = pgEnum("file_type", ["image", "video"]);
@@ -23,17 +32,21 @@ export const fileTypeEnum = pgEnum("file_type", ["image", "video"]);
 // Orders
 export const orders = pgTable("orders", {
   id: serial("id").primaryKey(),
-  customerId: integer("customer_id").notNull().references(() => customers.id, { onDelete: "restrict" }),
+  customerId: integer("customer_id").references(() => customers.id, { onDelete: "restrict" }),
   branchId: integer("branch_id").notNull().references(() => branches.id, { onDelete: "restrict" }),
   voucherId: integer("voucher_id").references(() => vouchers.id, { onDelete: "set null" }),
   subtotal: decimal("subtotal", { precision: 10, scale: 2 }).notNull(),
   discountAmount: decimal("discount_amount", { precision: 10, scale: 2 }).notNull().default("0"),
   totalPayment: decimal("total_payment", { precision: 10, scale: 2 }).notNull(),
   paymentMethod: paymentMethodEnum("payment_method").notNull(),
-  status: orderStatusEnum("status").notNull().default("received"),
+  status: orderStatusEnum("status").notNull().default("pending"),
   deliveryAddress: text("delivery_address"),
   orderDate: timestamp("order_date", { withTimezone: true }).notNull().defaultNow(),
   note: text("note"),
+  isGuest: boolean("is_guest").notNull().default(false),
+  guestName: varchar("guest_name", { length: 100 }),
+  guestPhone: varchar("guest_phone", { length: 20 }),
+  guestEmail: varchar("guest_email", { length: 100 }),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 });

@@ -5,7 +5,7 @@ const router = Router();
 
 /**
  * @openapi
- * /health:
+ * /api/health:
  *   get:
  *     tags:
  *       - System
@@ -49,6 +49,6 @@ const router = Router();
  *       503:
  *         description: System is degraded
  */
-router.get("/health", getHealth);
+router.get("/api/health", getHealth);
 
 export default router;

@@ -10,7 +10,7 @@ import {
   pgEnum,
   unique,
 } from "drizzle-orm/pg-core";
-import { accounts, branches, productCategories, customers, vouchers } from "./core";
+import { accounts, branches, productCategories, customers, vouchers, toppings } from "./core";
 
 // Enums
 export const employeeRoleEnum = pgEnum("employee_role", ["manager", "barista", "cashier", "delivery"]);
@@ -82,11 +82,20 @@ export const customerVouchers = pgTable("customer_vouchers", {
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
+// Category Toppings (which toppings are allowed per product category)
+export const categoryToppings = pgTable("category_toppings", {
+  id: serial("id").primaryKey(),
+  categoryId: integer("category_id").notNull().references(() => productCategories.id, { onDelete: "cascade" }),
+  toppingId: integer("topping_id").notNull().references(() => toppings.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+}, (t) => [unique().on(t.categoryId, t.toppingId)]);
+
 // News
 export const news = pgTable("news", {
   id: serial("id").primaryKey(),
   title: varchar("title", { length: 500 }).notNull(),
   content: text("content").notNull(),
+  imageUrl: text("image_url"),
   articleType: articleTypeEnum("article_type").notNull(),
   publishDate: date("publish_date").notNull().defaultNow(),
   publishStatus: publishStatusEnum("publish_status").notNull().default("draft"),

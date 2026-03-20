@@ -2,11 +2,12 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { ShoppingBag, Menu, X, MapPin } from "lucide-react";
+import { ShoppingBag, Menu, X, User, LogOut, Search } from "lucide-react";
+import { useCart } from "@/contexts/cart-context";
+import { useAuth } from "@/contexts/auth-context";
 
 const NAV_LINKS = [
   { label: "Menu", href: "/menu" },
-  { label: "Cửa Hàng", href: "/branches" },
   { label: "Tin Tức", href: "/news" },
   { label: "Về Lamtra", href: "/about" },
 ];
@@ -14,6 +15,8 @@ const NAV_LINKS = [
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { totalItems } = useCart();
+  const { user, isAuthenticated, logout } = useAuth();
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 20);
@@ -67,31 +70,53 @@ export function Navbar() {
 
             {/* Right actions */}
             <div className="flex items-center gap-2">
-              <button
-                className="hidden lg:flex items-center gap-1.5 text-sm font-medium text-lam-green-700 hover:text-lam-green-900 transition-colors px-3 py-2"
-                aria-label="Find nearest branch"
-              >
-                <MapPin className="w-4 h-4" />
-                <span>Gần Bạn</span>
-              </button>
-
               <Link
                 href="/cart"
                 className="relative flex items-center justify-center w-10 h-10 rounded-full hover:bg-lam-green-800/8 transition-colors group"
                 aria-label="Shopping cart"
               >
                 <ShoppingBag className="w-5 h-5 text-lam-green-800 group-hover:text-lam-green-900" />
-                <span className="absolute -top-0.5 -right-0.5 w-4.5 h-4.5 bg-lam-terracotta-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
-                  2
-                </span>
+                {totalItems > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 w-4.5 h-4.5 bg-lam-terracotta-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                    {totalItems > 99 ? "99+" : totalItems}
+                  </span>
+                )}
               </Link>
 
-              <Link
-                href="/account"
-                className="hidden lg:flex items-center gap-2 bg-lam-green-800 text-lam-cream-50 hover:bg-lam-green-700 transition-colors px-4 py-2 rounded-full text-sm font-medium"
-              >
-                Đăng Nhập
-              </Link>
+              {isAuthenticated && user ? (
+                <div className="hidden lg:flex items-center gap-2">
+                  <Link
+                    href="/orders"
+                    className="flex items-center gap-1.5 text-sm font-medium text-lam-green-700 hover:text-lam-green-900 transition-colors px-3 py-2"
+                  >
+                    <User className="w-4 h-4" />
+                    <span>{user.username}</span>
+                  </Link>
+                  <button
+                    onClick={logout}
+                    className="flex items-center justify-center w-9 h-9 rounded-full hover:bg-lam-green-800/8 transition-colors"
+                    aria-label="Đăng xuất"
+                  >
+                    <LogOut className="w-4 h-4 text-lam-green-700" />
+                  </button>
+                </div>
+              ) : (
+                <div className="hidden lg:flex items-center gap-2">
+                  <Link
+                    href="/track"
+                    className="flex items-center gap-1.5 text-sm font-medium text-lam-green-700 hover:text-lam-green-900 transition-colors px-3 py-2"
+                  >
+                    <Search className="w-4 h-4" />
+                    Tra cứu đơn
+                  </Link>
+                  <Link
+                    href="/login"
+                    className="flex items-center gap-2 bg-lam-green-800 text-lam-cream-50 hover:bg-lam-green-700 transition-colors px-4 py-2 rounded-full text-sm font-medium"
+                  >
+                    Đăng Nhập
+                  </Link>
+                </div>
+              )}
 
               {/* Mobile menu toggle */}
               <button
@@ -152,13 +177,40 @@ export function Navbar() {
             ))}
           </div>
           <div className="absolute bottom-8 left-6 right-6">
-            <Link
-              href="/account"
-              onClick={() => setMobileOpen(false)}
-              className="flex items-center justify-center w-full bg-lam-green-800 text-lam-cream-50 hover:bg-lam-green-700 transition-colors py-3 rounded-xl font-medium"
-            >
-              Đăng Nhập
-            </Link>
+            {isAuthenticated && user ? (
+              <div className="space-y-2">
+                <Link
+                  href="/orders"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center justify-center w-full border border-lam-cream-300 text-lam-green-800 hover:bg-lam-cream-100 transition-colors py-3 rounded-xl font-medium"
+                >
+                  Đơn Hàng Của Tôi
+                </Link>
+                <button
+                  onClick={() => { logout(); setMobileOpen(false); }}
+                  className="flex items-center justify-center w-full text-lam-green-700 hover:text-lam-green-900 transition-colors py-3 rounded-xl font-medium"
+                >
+                  Đăng Xuất
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                <Link
+                  href="/track"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center justify-center w-full border border-lam-cream-300 text-lam-green-800 hover:bg-lam-cream-100 transition-colors py-3 rounded-xl font-medium"
+                >
+                  Tra Cứu Đơn Hàng
+                </Link>
+                <Link
+                  href="/login"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center justify-center w-full bg-lam-green-800 text-lam-cream-50 hover:bg-lam-green-700 transition-colors py-3 rounded-xl font-medium"
+                >
+                  Đăng Nhập
+                </Link>
+              </div>
+            )}
           </div>
         </nav>
       </div>

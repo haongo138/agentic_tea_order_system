@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { ShoppingBag, Star, Plus } from "lucide-react";
+import { ShoppingBag, Plus } from "lucide-react";
 import type { Product } from "@/lib/types";
 
 interface ProductCardProps {
@@ -12,19 +12,19 @@ interface ProductCardProps {
 
 const BADGE_STYLES: Record<string, { label: string; className: string }> = {
   "best-seller": {
-    label: "Best Seller",
+    label: "Bán Chạy",
     className: "bg-lam-terracotta-500/10 text-lam-terracotta-600 border border-lam-terracotta-500/25",
   },
   new: {
-    label: "New",
+    label: "Mới",
     className: "bg-emerald-500/10 text-emerald-700 border border-emerald-500/25",
   },
   seasonal: {
-    label: "Seasonal",
+    label: "Theo Mùa",
     className: "bg-lam-gold-500/10 text-lam-gold-600 border border-lam-gold-500/25",
   },
   limited: {
-    label: "Limited",
+    label: "Giới Hạn",
     className: "bg-purple-500/10 text-purple-700 border border-purple-500/25",
   },
 };
@@ -49,23 +49,33 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
       <article className="bg-white rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-product-hover shadow-product cursor-pointer">
         {/* Image area */}
         <div className="relative h-52 overflow-hidden">
-          <div
-            className={`absolute inset-0 bg-gradient-to-br ${product.colorAccent} transition-transform duration-500 ${
-              isHovered ? "scale-110" : "scale-100"
-            }`}
-          />
-          {/* Decorative circles */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-28 h-28 rounded-full bg-white/15 backdrop-blur-sm flex items-center justify-center">
-              <div className="w-20 h-20 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                <span className="text-4xl">🧋</span>
+          {product.imageUrl ? (
+            <img
+              src={product.imageUrl}
+              alt={product.name}
+              className={`absolute inset-0 w-full h-full object-cover transition-transform duration-500 ${
+                isHovered ? "scale-110" : "scale-100"
+              }`}
+            />
+          ) : (
+            <>
+              <div
+                className={`absolute inset-0 bg-gradient-to-br ${product.colorAccent} transition-transform duration-500 ${
+                  isHovered ? "scale-110" : "scale-100"
+                }`}
+              />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-28 h-28 rounded-full bg-white/15 backdrop-blur-sm flex items-center justify-center">
+                  <div className="w-20 h-20 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                    <span className="text-4xl">🧋</span>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-          {/* Decorative floating bubbles */}
-          <div className="absolute top-4 right-4 w-3 h-3 rounded-full bg-white/30 animate-float" />
-          <div className="absolute top-8 right-10 w-2 h-2 rounded-full bg-white/20 animate-float" style={{ animationDelay: "1s" }} />
-          <div className="absolute bottom-6 left-5 w-2.5 h-2.5 rounded-full bg-white/25 animate-float" style={{ animationDelay: "2s" }} />
+              <div className="absolute top-4 right-4 w-3 h-3 rounded-full bg-white/30 animate-float" />
+              <div className="absolute top-8 right-10 w-2 h-2 rounded-full bg-white/20 animate-float" style={{ animationDelay: "1s" }} />
+              <div className="absolute bottom-6 left-5 w-2.5 h-2.5 rounded-full bg-white/25 animate-float" style={{ animationDelay: "2s" }} />
+            </>
+          )}
 
           {badge && (
             <div className="absolute top-3 left-3">
@@ -75,7 +85,6 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
             </div>
           )}
 
-          {/* Quick add overlay */}
           <div
             className={`absolute inset-x-0 bottom-0 flex items-center justify-center pb-4 transition-all duration-300 ${
               isHovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
@@ -85,7 +94,6 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
               className="flex items-center gap-2 bg-white/90 backdrop-blur-sm text-lam-green-900 hover:bg-white font-medium text-sm px-4 py-2 rounded-full shadow-lg transition-colors"
               onClick={(e) => {
                 e.preventDefault();
-                // TODO: open customization drawer
               }}
             >
               <Plus className="w-4 h-4" />
@@ -111,17 +119,9 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
           </p>
 
           <div className="flex items-center justify-between">
-            <div>
-              <p className="text-lg font-semibold text-lam-green-900">
-                {formattedPrice}
-              </p>
-              <div className="flex items-center gap-1 mt-0.5">
-                <Star className="w-3 h-3 fill-lam-gold-500 text-lam-gold-500" />
-                <span className="text-xs text-lam-green-700/60">
-                  {product.rating} ({product.reviewCount.toLocaleString()})
-                </span>
-              </div>
-            </div>
+            <p className="text-lg font-semibold text-lam-green-900">
+              {formattedPrice}
+            </p>
 
             <div
               className={`w-9 h-9 rounded-full bg-lam-green-800 flex items-center justify-center transition-all duration-200 ${

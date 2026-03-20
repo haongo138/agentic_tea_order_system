@@ -5,6 +5,10 @@ help:
 	@echo ""
 	@echo "  Lam Trà — available commands"
 	@echo ""
+	@echo "  devbox:"
+	@echo "    make dev                  Start all services (devbox + process-compose)"
+	@echo "    make install              Install all dependencies"
+	@echo ""
 	@echo "  client:"
 	@echo "    make client:install       Install all npm dependencies"
 	@echo "    make client:dev           Run customer + admin in parallel"
@@ -16,12 +20,10 @@ help:
 	@echo "    make client:clean         Remove node_modules and build artifacts"
 	@echo ""
 	@echo "  server:"
-	@echo "    make server:start         Start PHP dev server  →  http://localhost:8000"
-	@echo "    make server:logs          Tail PHP error log"
-	@echo ""
-	@echo "  ai:"
-	@echo "    make ai:install           Install Python dependencies"
-	@echo "    make ai:start             Start AI service  →  http://localhost:8001"
+	@echo "    make server:dev           Start Express API  →  http://localhost:4000"
+	@echo "    make server:install       Install server dependencies"
+	@echo "    make server:test          Run server tests"
+	@echo "    make server:build         Build server for production"
 	@echo ""
 
 # ── client: ───────────────────────────────────────────────────────────────────
@@ -50,18 +52,24 @@ client\:type-check:
 client\:clean:
 	rm -rf client/node_modules client/apps/customer/.next client/apps/admin/.next client/.turbo
 
+# ── devbox: ───────────────────────────────────────────────────────────────────
+
+dev:
+	devbox services up
+
+install:
+	devbox run install
+
 # ── server: ───────────────────────────────────────────────────────────────────
 
-server\:start:
-	php -S localhost:8000 -t backend-api/public backend-api/index.php
+server\:install:
+	cd server && npm install
 
-server\:logs:
-	tail -f backend-api/logs/error.log
+server\:dev:
+	cd server && npm run dev
 
-# ── ai: ───────────────────────────────────────────────────────────────────────
+server\:test:
+	cd server && npm run test
 
-ai\:install:
-	cd ai-service && pip install -r requirements.txt
-
-ai\:start:
-	cd ai-service && python main.py
+server\:build:
+	cd server && npm run build

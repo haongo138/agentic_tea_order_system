@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { Sora, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import { Sidebar } from "@/components/Sidebar";
+import { AuthProvider } from "@/contexts/auth-context";
+import { SocketProvider } from "@/contexts/socket-context";
+import { NotificationProvider } from "@/contexts/notification-context";
+import { AdminShell } from "@/components/AdminShell";
 
 const sora = Sora({
   subsets: ["latin"],
@@ -34,12 +37,13 @@ export default function AdminLayout({
   return (
     <html lang="vi" className={`${sora.variable} ${jetbrains.variable}`}>
       <body className="min-h-screen bg-admin-bg antialiased">
-        <div className="flex min-h-screen">
-          <Sidebar />
-          <div className="flex-1 flex flex-col min-w-0 lg:ml-[240px]">
-            {children}
-          </div>
-        </div>
+        <AuthProvider>
+          <SocketProvider>
+            <NotificationProvider>
+              <AdminShell>{children}</AdminShell>
+            </NotificationProvider>
+          </SocketProvider>
+        </AuthProvider>
       </body>
     </html>
   );

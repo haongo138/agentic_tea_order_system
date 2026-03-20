@@ -3,6 +3,8 @@ import { Cormorant_Garamond, Figtree } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { CartProvider } from "@/contexts/cart-context";
+import { AuthProvider } from "@/contexts/auth-context";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -36,9 +38,13 @@ export default function RootLayout({
   return (
     <html lang="vi" className={`${cormorant.variable} ${figtree.variable}`}>
       <body className="min-h-screen flex flex-col antialiased">
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <AuthProvider>
+          <CartProvider>
+            <Navbar />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </CartProvider>
+        </AuthProvider>
       </body>
     </html>
   );

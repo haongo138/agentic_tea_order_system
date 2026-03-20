@@ -6,8 +6,8 @@ import {
   LayoutDashboard,
   ShoppingBag,
   Coffee,
-  MapPin,
   BarChart3,
+  Newspaper,
   Users,
   Settings,
   LogOut,
@@ -20,8 +20,8 @@ const NAV_ITEMS = [
   { href: "/", label: "Tổng Quan", icon: LayoutDashboard },
   { href: "/orders", label: "Đơn Hàng", icon: ShoppingBag },
   { href: "/menu", label: "Thực Đơn", icon: Coffee },
-  { href: "/branches", label: "Chi Nhánh", icon: MapPin },
   { href: "/analytics", label: "Phân Tích", icon: BarChart3 },
+  { href: "/news", label: "Tin Tức", icon: Newspaper },
   { href: "/staff", label: "Nhân Viên", icon: Users },
 ];
 

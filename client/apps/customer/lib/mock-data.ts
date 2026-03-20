@@ -1,295 +1,58 @@
-import type { Branch, NewsArticle, Product, Topping, UserProfile } from "./types";
+import type { NewsArticle, OrderStatus } from "./types";
 
-export const TOPPINGS: Topping[] = [
-  { id: "black-pearl", name: "Black Pearls", nameVi: "Trân Châu Đen", price: 5000 },
-  { id: "white-pearl", name: "White Pearls", nameVi: "Trân Châu Trắng", price: 5000 },
-  { id: "coconut-jelly", name: "Coconut Jelly", nameVi: "Thạch Dừa", price: 5000 },
-  { id: "egg-pudding", name: "Egg Pudding", nameVi: "Pudding Trứng", price: 8000 },
-  { id: "grass-jelly", name: "Grass Jelly", nameVi: "Thạch Đen", price: 5000 },
-  { id: "aloe-vera", name: "Aloe Vera", nameVi: "Thạch Nha Đam", price: 6000 },
-  { id: "cheese-foam", name: "Cheese Foam", nameVi: "Kem Cheese", price: 10000 },
-  { id: "basil-seed", name: "Basil Seed", nameVi: "Hạt Chia", price: 5000 },
-];
+// Color accents for product image placeholders (mapped by product name patterns)
+export const PRODUCT_COLOR_ACCENTS: Record<string, string> = {
+  default: "from-amber-800 via-amber-600 to-amber-400",
+  matcha: "from-emerald-800 via-emerald-500 to-lime-400",
+  peach: "from-rose-400 via-pink-300 to-amber-200",
+  taro: "from-purple-700 via-violet-500 to-purple-300",
+  "brown sugar": "from-stone-800 via-amber-700 to-amber-400",
+  blueberry: "from-indigo-700 via-blue-500 to-violet-300",
+  oolong: "from-stone-600 via-amber-500 to-yellow-300",
+  strawberry: "from-rose-500 via-pink-400 to-rose-200",
+  coconut: "from-green-700 via-emerald-400 to-lime-200",
+  "cold brew": "from-lime-700 via-yellow-500 to-lime-200",
+  macchiato: "from-red-700 via-rose-500 to-pink-300",
+  passion: "from-yellow-500 via-orange-400 to-yellow-200",
+};
 
-export const PRODUCTS: Product[] = [
-  {
-    id: "classic-milk-tea",
-    name: "Classic Milk Tea",
-    nameVi: "Trà Sữa Truyền Thống",
-    description: "Our foundational brew — bold black tea balanced with fresh milk and a whisper of vanilla. The drink that started it all.",
-    category: "milk-tea",
-    price: 35000,
-    badge: "best-seller",
-    rating: 4.8,
-    reviewCount: 2341,
-    tags: ["classic", "milk-tea", "bestseller"],
-    colorAccent: "from-amber-800 via-amber-600 to-amber-400",
-    available: true,
-  },
-  {
-    id: "matcha-latte",
-    name: "Ceremonial Matcha Latte",
-    nameVi: "Trà Sữa Matcha",
-    description: "Premium Japanese matcha sourced from Uji, whisked to silky perfection with steamed oat milk.",
-    category: "milk-tea",
-    price: 45000,
-    badge: "new",
-    rating: 4.9,
-    reviewCount: 876,
-    tags: ["matcha", "premium", "new"],
-    colorAccent: "from-emerald-800 via-emerald-500 to-lime-400",
-    available: true,
-  },
-  {
-    id: "peach-lychee-tea",
-    name: "Peach & Lychee Bloom",
-    nameVi: "Trà Đào Cam Sả",
-    description: "Sun-ripened peach meets fragrant lychee in this radiant fruit tea. Finished with a sprig of lemongrass.",
-    category: "fruit-tea",
-    price: 40000,
-    badge: "best-seller",
-    rating: 4.7,
-    reviewCount: 1543,
-    tags: ["fruit", "peach", "refreshing"],
-    colorAccent: "from-rose-400 via-pink-300 to-amber-200",
-    available: true,
-  },
-  {
-    id: "hong-tra-macchiato",
-    name: "Red Tea Macchiato",
-    nameVi: "Hồng Trà Macchiato",
-    description: "Crimson Ceylon tea crowned with our signature salted cheese foam. Sweet, salty, unforgettable.",
-    category: "cheese-foam",
-    price: 42000,
-    badge: "best-seller",
-    rating: 4.6,
-    reviewCount: 987,
-    tags: ["cheese-foam", "black-tea", "popular"],
-    colorAccent: "from-red-700 via-rose-500 to-pink-300",
-    available: true,
-  },
-  {
-    id: "taro-milk-tea",
-    name: "Purple Taro Dream",
-    nameVi: "Trà Sữa Khoai Môn",
-    description: "Velvety taro root blended into a dreamy lavender milk tea. Creamy, earthy, and deeply satisfying.",
-    category: "milk-tea",
-    price: 38000,
-    rating: 4.5,
-    reviewCount: 654,
-    tags: ["taro", "creamy", "purple"],
-    colorAccent: "from-purple-700 via-violet-500 to-purple-300",
-    available: true,
-  },
-  {
-    id: "passionfruit-tea",
-    name: "Passionfruit Garden",
-    nameVi: "Chanh Dây Hoa Quả",
-    description: "A tropical medley of passionfruit, kumquat and fresh berries over cold brew jasmine tea.",
-    category: "fruit-tea",
-    price: 38000,
-    badge: "seasonal",
-    rating: 4.7,
-    reviewCount: 432,
-    tags: ["tropical", "cold", "fruit"],
-    colorAccent: "from-yellow-500 via-orange-400 to-yellow-200",
-    available: true,
-  },
-  {
-    id: "brown-sugar-milk-tea",
-    name: "Brown Sugar Tiger",
-    nameVi: "Trà Sữa Đường Đen",
-    description: "Hand-crafted brown sugar syrup swirled through fresh milk, poured over chewy tapioca pearls.",
-    category: "milk-tea",
-    price: 45000,
-    badge: "best-seller",
-    rating: 4.9,
-    reviewCount: 3201,
-    tags: ["brown-sugar", "pearls", "viral"],
-    colorAccent: "from-stone-800 via-amber-700 to-amber-400",
-    available: true,
-  },
-  {
-    id: "blueberry-milk",
-    name: "Wild Blueberry Milk",
-    nameVi: "Sữa Việt Quất",
-    description: "Fresh blueberries muddled into cold whole milk. Vibrant, antioxidant-rich, beautifully purple.",
-    category: "blended",
-    price: 42000,
-    badge: "new",
-    rating: 4.4,
-    reviewCount: 215,
-    tags: ["blueberry", "milk", "fresh"],
-    colorAccent: "from-indigo-700 via-blue-500 to-violet-300",
-    available: true,
-  },
-  {
-    id: "oolong-milk-tea",
-    name: "High Mountain Oolong",
-    nameVi: "Trà Sữa Oolong",
-    description: "Taiwanese High Mountain oolong with its naturally floral, roasted character — elevated with cream.",
-    category: "milk-tea",
-    price: 40000,
-    rating: 4.6,
-    reviewCount: 789,
-    tags: ["oolong", "taiwanese", "floral"],
-    colorAccent: "from-stone-600 via-amber-500 to-yellow-300",
-    available: true,
-  },
-  {
-    id: "strawberry-jasmine",
-    name: "Strawberry Jasmine Fizz",
-    nameVi: "Trà Hoa Lài Dâu Tây",
-    description: "Cold-pressed strawberry meets chilled jasmine tea topped with sparkling water. Effervescent delight.",
-    category: "cold-brew",
-    price: 43000,
-    badge: "seasonal",
-    rating: 4.5,
-    reviewCount: 341,
-    tags: ["strawberry", "jasmine", "sparkling"],
-    colorAccent: "from-rose-500 via-pink-400 to-rose-200",
-    available: true,
-  },
-  {
-    id: "coconut-pandan",
-    name: "Coconut Pandan Layer",
-    nameVi: "Sữa Dừa Lá Dứa",
-    description: "Layers of creamy coconut milk and earthy pandan jelly — a Vietnamese garden in a cup.",
-    category: "blended",
-    price: 44000,
-    rating: 4.8,
-    reviewCount: 567,
-    tags: ["coconut", "pandan", "vietnamese"],
-    colorAccent: "from-green-700 via-emerald-400 to-lime-200",
-    available: true,
-  },
-  {
-    id: "cold-brew-lemon",
-    name: "Cold Brew Citrus",
-    nameVi: "Cold Brew Chanh Sả",
-    description: "12-hour cold-steeped black tea with fresh lime, lemongrass, and a hint of honey.",
-    category: "cold-brew",
-    price: 39000,
-    rating: 4.4,
-    reviewCount: 298,
-    tags: ["cold-brew", "lemon", "refreshing"],
-    colorAccent: "from-lime-700 via-yellow-500 to-lime-200",
-    available: true,
-  },
-];
-
-export const FEATURED_PRODUCTS = PRODUCTS.filter((p) => p.badge === "best-seller").slice(0, 3);
-
-export const BRANCHES: Branch[] = [
-  {
-    id: "q1",
-    name: "Lam Trà Quận 1",
-    address: "123 Lê Lợi, Phường Bến Nghé",
-    district: "Quận 1",
-    phone: "028 3823 1234",
-    hours: "07:00 – 22:30",
-    rating: 4.8,
-    isOpen: true,
-  },
-  {
-    id: "q3",
-    name: "Lam Trà Quận 3",
-    address: "456 Võ Văn Tần, Phường 5",
-    district: "Quận 3",
-    phone: "028 3824 5678",
-    hours: "07:00 – 22:30",
-    rating: 4.7,
-    isOpen: true,
-  },
-  {
-    id: "thu-duc",
-    name: "Lam Trà Thủ Đức",
-    address: "789 Võ Ngọc Phan, Phường Linh Đông",
-    district: "TP. Thủ Đức",
-    phone: "028 3825 9012",
-    hours: "07:00 – 22:00",
-    rating: 4.6,
-    isOpen: true,
-  },
-  {
-    id: "binh-thanh",
-    name: "Lam Trà Bình Thạnh",
-    address: "321 Phan Đình Phùng, Phường 2",
-    district: "Quận Bình Thạnh",
-    phone: "028 3826 3456",
-    hours: "07:30 – 22:00",
-    rating: 4.7,
-    isOpen: false,
-  },
-  {
-    id: "go-vap",
-    name: "Lam Trà Gò Vấp",
-    address: "654 Quang Trung, Phường 11",
-    district: "Quận Gò Vấp",
-    phone: "028 3827 7890",
-    hours: "07:00 – 22:30",
-    rating: 4.5,
-    isOpen: true,
-  },
-];
+export function getColorAccent(productName: string): string {
+  const lower = productName.toLowerCase();
+  for (const [key, value] of Object.entries(PRODUCT_COLOR_ACCENTS)) {
+    if (key !== "default" && lower.includes(key)) return value;
+  }
+  return PRODUCT_COLOR_ACCENTS.default;
+}
 
 export const NEWS_ARTICLES: NewsArticle[] = [
   {
     id: "1",
-    title: "The Art of the Perfect Brew: How We Source Our Teas",
-    excerpt: "From the misty highlands of Lâm Đồng to the ancient tea gardens of Thái Nguyên — our sourcing story.",
-    category: "Craftsmanship",
+    title: "Nghệ Thuật Pha Trà Hoàn Hảo: Hành Trình Tìm Kiếm Nguyên Liệu",
+    excerpt: "Từ những đồi chè sương mù ở Lâm Đồng đến những vườn trà cổ thụ Thái Nguyên — câu chuyện nguồn gốc của chúng tôi.",
+    category: "Nghệ Thuật",
     publishedAt: "2026-03-10",
     imageGradient: "from-emerald-900 via-green-700 to-teal-500",
     featured: true,
   },
   {
     id: "2",
-    title: "Spring Menu 2026: Sakura & Lychee Season Arrives",
-    excerpt: "Our limited spring collection celebrates Vietnamese florals with four new seasonal creations.",
-    category: "New Arrivals",
+    title: "Menu Mùa Xuân 2026: Mùa Sakura & Vải Thiều Đã Đến",
+    excerpt: "Bộ sưu tập mùa xuân giới hạn tôn vinh hương hoa Việt Nam với bốn sáng tạo theo mùa.",
+    category: "Sản Phẩm Mới",
     publishedAt: "2026-03-08",
     imageGradient: "from-rose-700 via-pink-500 to-rose-200",
     featured: false,
   },
   {
     id: "3",
-    title: "Introducing Lam Trà Loyalty: Earn More, Sip More",
-    excerpt: "Our new tiered loyalty program rewards every purchase with points redeemable for free drinks.",
-    category: "Rewards",
+    title: "Ra Mắt Lam Trà Loyalty: Uống Nhiều, Tích Nhiều",
+    excerpt: "Chương trình khách hàng thân thiết mới với điểm tích lũy đổi thức uống miễn phí.",
+    category: "Ưu Đãi",
     publishedAt: "2026-03-05",
     imageGradient: "from-amber-800 via-yellow-500 to-amber-200",
     featured: false,
   },
 ];
-
-export const MOCK_USER: UserProfile = {
-  id: "u1",
-  name: "Nguyễn Thị Lan",
-  email: "lan.nguyen@gmail.com",
-  phone: "0901 234 567",
-  points: 340,
-  tier: "silver",
-  totalSpent: 1250000,
-  orderCount: 35,
-  joinedAt: "2025-09-15",
-};
-
-export const SIZE_PRICES: Record<"S" | "M" | "L", number> = {
-  S: 0,
-  M: 5000,
-  L: 10000,
-};
-
-export const CATEGORY_LABELS: Record<string, string> = {
-  all: "Tất Cả",
-  "milk-tea": "Trà Sữa",
-  "fruit-tea": "Trà Trái Cây",
-  blended: "Sinh Tố",
-  "cold-brew": "Cold Brew",
-  seasonal: "Theo Mùa",
-  "cheese-foam": "Kem Cheese",
-};
 
 export const TIER_THRESHOLDS = {
   bronze: 0,
@@ -297,4 +60,57 @@ export const TIER_THRESHOLDS = {
   gold: 2000000,
 };
 
-export const TIER_POINTS_PER_VND = 1 / 10000; // 1 point per 10k VND
+export const TIER_POINTS_PER_VND = 1 / 10000;
+
+// Legacy status normalization (map old DB values → new status values)
+const LEGACY_STATUS_MAP: Record<string, OrderStatus> = {
+  received: "pending",
+  prepared: "ready",
+  collected: "delivered",
+  paid: "completed",
+};
+
+export function normalizeStatus(status: string): OrderStatus {
+  return LEGACY_STATUS_MAP[status] ?? (status as OrderStatus);
+}
+
+// Order status display mapping (backend → Vietnamese)
+export const ORDER_STATUS_LABELS: Record<string, string> = {
+  pending: "Chờ Xử Lý",
+  preparing: "Đang Pha Chế",
+  ready: "Sẵn Sàng",
+  delivering: "Đang Giao Hàng",
+  delivered: "Đã Giao",
+  completed: "Hoàn Thành",
+  cancelled: "Đã Hủy",
+  // Legacy statuses (before migration)
+  received: "Đã Nhận",
+  prepared: "Đã Pha Chế",
+  collected: "Đã Lấy Hàng",
+  paid: "Đã Thanh Toán",
+};
+
+// Payment method display mapping (backend → Vietnamese)
+export const PAYMENT_METHOD_LABELS: Record<string, string> = {
+  cash: "Tiền Mặt",
+  momo: "MoMo",
+  vnpay: "VNPay",
+  bank_transfer: "Chuyển Khoản",
+  cod: "Thanh Toán Khi Nhận Hàng",
+};
+
+// Order status badge styles (bg + text + border)
+export const ORDER_STATUS_STYLES: Record<string, string> = {
+  pending: "bg-amber-50 text-amber-700 border-amber-200",
+  preparing: "bg-blue-50 text-blue-700 border-blue-200",
+  ready: "bg-indigo-50 text-indigo-700 border-indigo-200",
+  delivering: "bg-orange-50 text-orange-700 border-orange-200",
+  delivered: "bg-emerald-50 text-emerald-700 border-emerald-200",
+  completed: "bg-gray-50 text-gray-700 border-gray-200",
+  cancelled: "bg-red-50 text-red-700 border-red-200",
+  // Legacy statuses (before migration)
+  received: "bg-amber-50 text-amber-700 border-amber-200",
+  prepared: "bg-blue-50 text-blue-700 border-blue-200",
+  collected: "bg-emerald-50 text-emerald-700 border-emerald-200",
+  paid: "bg-gray-50 text-gray-700 border-gray-200",
+};

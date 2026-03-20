@@ -9,6 +9,11 @@ const envSchema = z.object({
     .enum(["development", "production", "test"])
     .default("development"),
   DATABASE_URL: z.string().min(1),
+  JWT_SECRET: z.string().min(32),
+  JWT_EXPIRES_IN: z.string().default("7d"),
+  SUPABASE_URL: z.string().url(),
+  SUPABASE_SERVICE_ROLE_KEY: z.string().min(1),
+  AUTO_DELIVERY_MINUTES: z.coerce.number().int().positive().default(10),
 });
 
 const parsed = envSchema.safeParse(process.env);

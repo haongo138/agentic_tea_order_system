@@ -1,61 +1,98 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { Filter } from "lucide-react";
+import { useState, useEffect, useMemo, useCallback } from "react";
+import { Loader2 } from "lucide-react";
 import { TopBar } from "@/components/TopBar";
 import { OrderCard } from "@/components/OrderCard";
-import { MOCK_ORDERS, MOCK_BRANCHES } from "@/lib/mock-data";
+import { fetchOrders, updateOrderStatus } from "@/lib/api/orders";
+import { STATUS_FILTERS, normalizeStatus } from "@/lib/mock-data";
 import type { AdminOrder, OrderStatus } from "@/lib/types";
 
-const STATUS_FILTERS: { value: OrderStatus | "all"; label: string }[] = [
-  { value: "all", label: "Tất Cả" },
-  { value: "pending", label: "Chờ Xử Lý" },
-  { value: "preparing", label: "Đang Pha" },
-  { value: "ready", label: "Sẵn Sàng" },
-  { value: "completed", label: "Hoàn Thành" },
-  { value: "cancelled", label: "Đã Huỷ" },
-];
-
 export default function OrdersPage() {
-  const [orders, setOrders] = useState<AdminOrder[]>(MOCK_ORDERS);
+  const [orders, setOrders] = useState<AdminOrder[]>([]);
   const [statusFilter, setStatusFilter] = useState<OrderStatus | "all">("all");
-  const [branchFilter, setBranchFilter] = useState("all");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleStatusChange = (id: string, status: OrderStatus) => {
-    setOrders((prev) =>
-      prev.map((o) => (o.id === id ? { ...o, status, updatedAt: new Date().toISOString() } : o))
-    );
-  };
+  useEffect(() => {
+    async function load() {
+      try {
+        const ordersRes = await fetchOrders();
+        setOrders(ordersRes.data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Không thể tải dữ liệu");
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
+  }, []);
+
+  const handleStatusChange = useCallback(async (id: number, status: OrderStatus) => {
+    try {
+      await updateOrderStatus(id, status);
+      setOrders((prev) =>
+        prev.map((o) => (o.id === id ? { ...o, status } : o))
+      );
+    } catch (err) {
+      console.error("Failed to update order status:", err);
+    }
+  }, []);
 
   const filtered = useMemo(() => {
     return orders.filter((o) => {
-      const matchStatus = statusFilter === "all" || o.status === statusFilter;
-      const matchBranch = branchFilter === "all" || o.branchId === branchFilter;
-      return matchStatus && matchBranch;
+      return statusFilter === "all" || normalizeStatus(o.status) === statusFilter;
     });
-  }, [orders, statusFilter, branchFilter]);
+  }, [orders, statusFilter]);
 
   const counts = useMemo(() => {
     return orders.reduce(
       (acc, o) => {
-        acc[o.status] = (acc[o.status] || 0) + 1;
+        const ns = normalizeStatus(o.status);
+        acc[ns] = (acc[ns] || 0) + 1;
         return acc;
       },
       {} as Record<string, number>
     );
   }, [orders]);
 
+  if (loading) {
+    return (
+      <div className="flex flex-col min-h-full">
+        <TopBar title="Đơn Hàng" subtitle="Đang tải..." />
+        <div className="flex-1 flex items-center justify-center">
+          <Loader2 className="w-8 h-8 animate-spin text-admin-muted" />
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col min-h-full">
+        <TopBar title="Đơn Hàng" subtitle="" />
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <p className="text-admin-rose text-sm mb-2">{error}</p>
+            <button onClick={() => window.location.reload()} className="text-xs text-admin-gold hover:underline">
+              Thử lại
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col min-h-full">
       <TopBar
         title="Đơn Hàng"
-        subtitle={`${orders.length} đơn hàng hôm nay`}
+        subtitle={`${orders.length} đơn hàng`}
       />
 
       <div className="p-6 space-y-5">
         {/* Filters */}
         <div className="flex flex-col sm:flex-row gap-3">
-          {/* Status pills */}
           <div className="flex items-center gap-1.5 flex-wrap">
             {STATUS_FILTERS.map(({ value, label }) => {
               const count = value === "all" ? orders.length : counts[value] || 0;
@@ -79,20 +116,6 @@ export default function OrdersPage() {
             })}
           </div>
 
-          {/* Branch filter */}
-          <div className="flex items-center gap-2 sm:ml-auto">
-            <Filter size={14} className="text-admin-muted" />
-            <select
-              value={branchFilter}
-              onChange={(e) => setBranchFilter(e.target.value)}
-              className="text-sm bg-admin-surface border border-admin-border rounded-lg px-3 py-1.5 text-admin-text focus:outline-none focus:border-admin-gold/40"
-            >
-              <option value="all">Tất Cả Chi Nhánh</option>
-              {MOCK_BRANCHES.map((b) => (
-                <option key={b.id} value={b.id}>{b.name}</option>
-              ))}
-            </select>
-          </div>
         </div>
 
         {/* Orders Grid */}
